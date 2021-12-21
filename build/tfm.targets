@@ -1,0 +1,47 @@
+﻿<Project>
+
+    <Target Name="TFM/Init">
+        <PropertyGroup>
+            <_SourceFiles>$(MSBuildThisFileDirectory)..\..\_files\**</_SourceFiles>
+            <_RelativeDestinationDirectory></_RelativeDestinationDirectory>
+            <_DestinationDirectory>$(MSBuildProjectDirectory)\$(_RelativeDestinationDirectory)</_DestinationDirectory>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <_SourceFiles Include="$(_SourceFiles)" />
+            <_DestinationFiles Include="@(_SourceFiles->'$(_DestinationDirectory)%(RecursiveDir)%(Filename)%(Extension)')">
+                <RelativeDirectory>$(_RelativeDestinationDirectory)%(RecursiveDir)</RelativeDirectory>
+            </_DestinationFiles>
+            <_DestinationDirectories Include="@(_SourceFiles->'$(_DestinationDirectory)%(RecursiveDir)')" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="TFM/Copy" BeforeTargets="BeforeBuild" DependsOnTargets="TFM/Init">
+        <Message Importance="High" Text="_SourceFiles = @(_SourceFiles)" />
+        <Message Importance="High" Text="_DestinationFiles = @(_DestinationFiles)" />
+
+        <Copy
+            SourceFiles="@(_SourceFiles)"
+            DestinationFiles="@(_DestinationFiles)"
+            SkipUnchangedFiles="true" />
+    </Target>
+
+    <Target Name="TFM/Clean" BeforeTargets="BeforeClean" DependsOnTargets="TFM/Init">
+        <Delete Files="@(_DestinationFiles)" />
+
+        <ItemGroup>
+            <_EmptyDirectories Include="@(_DestinationDirectories)" Condition="Exists('%(_DestinationDirectories.Identity)') and '$([System.IO.Directory]::GetFiles(%(_DestinationDirectories.Identity), *, System.IO.SearchOption.AllDirectories).Length)' == '0'" />
+        </ItemGroup>
+
+        <RemoveDir Directories="@(_EmptyDirectories)" />
+    </Target>
+
+    <Target Name="TFM/Publish" AfterTargets="ComputeFilesToPublish" DependsOnTargets="TFM/Init">
+        <ItemGroup>
+            <ResolvedFileToPublish Include="@(_DestinationFiles)">
+                <RelativePath>%(_DestinationFiles.RelativeDirectory)%(Filename)%(Extension)</RelativePath>
+            </ResolvedFileToPublish>
+        </ItemGroup>
+    </Target>
+
+</Project>
