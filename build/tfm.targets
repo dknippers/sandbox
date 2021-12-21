@@ -2,7 +2,8 @@
 
     <Target Name="TFM/Init">
         <PropertyGroup>
-            <_SourceFiles>$(MSBuildThisFileDirectory)..\..\_files\**</_SourceFiles>
+            <_SourceDirectory>$(MSBuildThisFileDirectory)..\..\_files</_SourceDirectory>
+            <_SourceFiles>$(_SourceDirectory)\**;$(_SourceDirectory)_$(TargetFramework)\**</_SourceFiles>
             <_RelativeDestinationDirectory></_RelativeDestinationDirectory>
             <_DestinationDirectory>$(MSBuildProjectDirectory)\$(_RelativeDestinationDirectory)</_DestinationDirectory>
         </PropertyGroup>
@@ -17,9 +18,6 @@
     </Target>
 
     <Target Name="TFM/Copy" BeforeTargets="BeforeBuild" DependsOnTargets="TFM/Init">
-        <Message Importance="High" Text="_SourceFiles = @(_SourceFiles)" />
-        <Message Importance="High" Text="_DestinationFiles = @(_DestinationFiles)" />
-
         <Copy
             SourceFiles="@(_SourceFiles)"
             DestinationFiles="@(_DestinationFiles)"
