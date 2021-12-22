@@ -2,8 +2,8 @@
 
     <Target Name="TFM/Init">
         <PropertyGroup>
-            <_SourceDirectory>$(MSBuildThisFileDirectory)..\..\_files</_SourceDirectory>
-            <_SourceFiles>$(_SourceDirectory)\**;$(_SourceDirectory)_$(TargetFramework)\**</_SourceFiles>
+            <_SourceDirectory>$(MSBuildThisFileDirectory)..\..\_files\</_SourceDirectory>
+            <_SourceFiles>$(_SourceDirectory)any\**;$(_SourceDirectory)$(TargetFramework)\**</_SourceFiles>
             <_RelativeDestinationDirectory></_RelativeDestinationDirectory>
             <_DestinationDirectory>$(MSBuildProjectDirectory)\$(_RelativeDestinationDirectory)</_DestinationDirectory>
         </PropertyGroup>

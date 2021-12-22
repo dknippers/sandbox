@@ -1,8 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
-    <Import Project="build\tfm.targets" />
+    <!-- <Import Project="build\tfm.targets" /> -->
+
+    <PropertyGroup>
+        <BeforePack>$(BeforePack);Sandbox/Pack</BeforePack>
+    </PropertyGroup>
+
+    <Target Name="Sandbox/Pack">
+        <ItemGroup>
+            <_TargetFrameworks Include="$(TargetFrameworks)" />
+            <None Include="$(OutputPath)%(_TargetFrameworks.Identity)\$(AssemblyName)">
+                <Pack>true</Pack>
+                <PackagePath>some\random\dir\%(Identity)</PackagePath>
+            </None>
+        </ItemGroup>
+    </Target>
 </Project>
